@@ -1,0 +1,52 @@
+Jane Smith
+jane.smith@email.com | github.com/janesmith | linkedin.com/in/janesmith
+
+SUMMARY
+Results-driven software engineer with 6 years of experience building scalable
+back-end systems and ML-powered data pipelines. Passionate about clean
+architecture, developer experience, and bringing models to production.
+
+EXPERIENCE
+
+2021 - Present | DataCore Inc | Senior Software Engineer
+- Designed and deployed microservices with FastAPI and PostgreSQL, handling
+  2M+ daily API requests with 99.9% uptime.
+- Built an internal ML platform using Python, scikit-learn, and MLflow,
+  reducing model deployment time from 2 weeks to 2 days.
+- Led migration of legacy monolith to Kubernetes-orchestrated Docker containers
+  on AWS (ECS + RDS), cutting infrastructure cost by 35%.
+- Introduced CI/CD pipelines with GitHub Actions and Terraform for IaC.
+
+2019 - 2021 | Infotech Solutions | Software Engineer
+- Developed ETL pipelines with Apache Airflow and pandas for ingesting 50 GB
+  of daily data into Snowflake.
+- Built a real-time recommendation engine using collaborative filtering and
+  Redis caching; improved click-through rate by 18%.
+- Wrote unit and integration tests with pytest, achieving 90% code coverage.
+- Collaborated with front-end team on React dashboards for internal analytics.
+
+2018 - 2019 | Freelance
+- Built REST APIs for three startups using Flask, SQLite, and JWT auth.
+- Set up monitoring with Prometheus and Grafana for a SaaS client.
+
+SKILLS
+Python, FastAPI, Flask, PostgreSQL, MySQL, Redis, Docker, Kubernetes,
+AWS, Terraform, GitHub Actions, Apache Airflow, Snowflake, pandas, NumPy,
+scikit-learn, MLflow, Prometheus, Grafana, React, SQL, Git, Linux,
+REST API, Microservices, CI/CD, Machine Learning, Data Engineering
+
+EDUCATION
+B.Sc. Computer Science — University of California, Berkeley, 2018
+
+PROJECTS
+- open-source: contributed 12 PRs to the FastAPI repository (performance
+  fixes and documentation improvements).
+- ML Pipeline Template: A reusable Cookiecutter template for MLOps projects
+  with pre-configured MLflow, DVC, and Docker. (GitHub: 400+ stars)
+- Real-time Flood Sensor Dashboard: IoT data ingestion with MQTT, TimescaleDB,
+  and a Streamlit front-end for visualising water-level sensor readings.
+
+CERTIFICATIONS
+- AWS Certified Solutions Architect – Associate (2022)
+- Google Professional Data Engineer (2023)
+

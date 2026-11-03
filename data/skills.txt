@@ -1,0 +1,291 @@
+Python
+JavaScript
+TypeScript
+Java
+C++
+C#
+C
+Go
+Rust
+Swift
+Kotlin
+Ruby
+PHP
+Scala
+R
+MATLAB
+Perl
+Haskell
+Elixir
+Clojure
+Lua
+Dart
+Julia
+F#
+Groovy
+Shell
+Bash
+PowerShell
+SQL
+HTML
+CSS
+React
+Angular
+Vue
+Next.js
+Nuxt.js
+Svelte
+Remix
+Gatsby
+Redux
+MobX
+GraphQL
+REST
+gRPC
+WebSocket
+Node.js
+Express
+FastAPI
+Django
+Flask
+Spring
+Spring Boot
+Laravel
+Rails
+ASP.NET
+NestJS
+Gin
+Echo
+Fiber
+Actix
+Axum
+Rocket
+Tornado
+Celery
+Kafka
+RabbitMQ
+Redis
+Elasticsearch
+Solr
+PostgreSQL
+MySQL
+SQLite
+MongoDB
+DynamoDB
+Cassandra
+CouchDB
+Neo4j
+InfluxDB
+TimescaleDB
+Snowflake
+BigQuery
+Redshift
+dbt
+Airflow
+Prefect
+Luigi
+Dagster
+Spark
+Hadoop
+Flink
+Beam
+Hive
+Presto
+Trino
+pandas
+NumPy
+SciPy
+scikit-learn
+TensorFlow
+PyTorch
+Keras
+JAX
+Hugging Face
+transformers
+BERT
+GPT
+LangChain
+LlamaIndex
+OpenAI
+Anthropic
+Stable Diffusion
+OpenCV
+NLTK
+spaCy
+Gensim
+XGBoost
+LightGBM
+CatBoost
+MLflow
+Weights & Biases
+DVC
+BentoML
+FastAPI
+Triton
+ONNX
+TensorRT
+CUDA
+Docker
+Kubernetes
+Helm
+Terraform
+Ansible
+Puppet
+Chef
+SaltStack
+Vagrant
+Packer
+AWS
+GCP
+Azure
+DigitalOcean
+Heroku
+Vercel
+Netlify
+Cloudflare
+GitHub Actions
+GitLab CI
+Jenkins
+CircleCI
+Travis CI
+ArgoCD
+Flux
+Prometheus
+Grafana
+Datadog
+New Relic
+Splunk
+ELK Stack
+Jaeger
+Zipkin
+OpenTelemetry
+Nginx
+Apache
+HAProxy
+Traefik
+Istio
+Envoy
+Linux
+Ubuntu
+Debian
+CentOS
+Alpine
+macOS
+Windows Server
+Git
+GitHub
+GitLab
+Bitbucket
+Jira
+Confluence
+Notion
+Slack
+Figma
+Postman
+Insomnia
+Swagger
+OpenAPI
+gRPC
+Protocol Buffers
+Avro
+Parquet
+Arrow
+JWT
+OAuth
+SAML
+LDAP
+Active Directory
+Vault
+Keycloak
+Auth0
+TLS
+SSL
+VPN
+Firewall
+IAM
+RBAC
+SOC2
+HIPAA
+GDPR
+CI/CD
+DevOps
+SRE
+Agile
+Scrum
+Kanban
+TDD
+BDD
+DDD
+SOLID
+Clean Architecture
+Microservices
+Serverless
+Event-Driven
+CQRS
+Event Sourcing
+Hexagonal Architecture
+Design Patterns
+Data Structures
+Algorithms
+System Design
+API Design
+Database Design
+Object-Oriented Programming
+Functional Programming
+Reactive Programming
+Concurrent Programming
+Distributed Systems
+Machine Learning
+Deep Learning
+NLP
+Computer Vision
+Data Engineering
+Data Science
+MLOps
+DataOps
+Cloud Native
+Infrastructure as Code
+Site Reliability Engineering
+Platform Engineering
+Security Engineering
+ChromaDB
+Pinecone
+Weaviate
+Qdrant
+Milvus
+LangChain
+LlamaIndex
+sentence-transformers
+Streamlit
+Gradio
+Dash
+Plotly
+Matplotlib
+Seaborn
+Bokeh
+Altair
+D3.js
+Three.js
+WebGL
+Unity
+Unreal Engine
+Godot
+OpenGL
+Vulkan
+DirectX
+ROS
+Raspberry Pi
+Arduino
+FPGA
+Verilog
+VHDL
+Embedded Systems
+IoT
+MQTT
+Zigbee
+Bluetooth
+WiFi
+5G
+WebRTC
+WASM
+

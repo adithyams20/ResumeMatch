@@ -1,0 +1,47 @@
+Senior Machine Learning Engineer — FinTech Platform
+
+Company: PayStream Technologies
+Location: Remote (US/EU)
+Type: Full-Time
+
+ABOUT THE ROLE
+PayStream is building the next generation of real-time fraud detection and
+credit-risk scoring systems. We are looking for a Senior Machine Learning
+Engineer with at least 5 years of experience to design, train, and operate
+ML models at scale in a regulated financial environment.
+
+RESPONSIBILITIES
+- Design and implement production-grade ML pipelines for fraud detection and
+  credit scoring, processing millions of transactions per day.
+- Collaborate with data engineers to ensure high-quality feature engineering
+  and data pipelines built on Apache Spark and Kafka.
+- Deploy and monitor models using MLflow, BentoML, or similar MLOps tooling.
+- Champion model explainability (SHAP, LIME) to meet regulatory requirements
+  (SOC 2, GDPR).
+- Mentor junior engineers and conduct technical design reviews.
+- Participate in on-call rotation for production ML systems.
+
+REQUIREMENTS
+- 5+ years of professional experience in software engineering or machine learning.
+- Strong proficiency in Python and hands-on experience with scikit-learn,
+  XGBoost, LightGBM, or PyTorch.
+- Experience building and maintaining real-time data pipelines with Kafka or
+  Spark Streaming.
+- Solid knowledge of MLOps practices: experiment tracking (MLflow), model
+  serving, A/B testing, and monitoring for data drift.
+- Experience with cloud platforms (AWS or GCP) and container orchestration
+  (Docker, Kubernetes).
+- Familiarity with SQL and columnar data warehouses (Snowflake, BigQuery, or Redshift).
+- Strong understanding of software engineering best practices: testing (pytest),
+  CI/CD, and code review.
+
+NICE TO HAVE
+- Experience with LLMs, RAG architectures, or LangChain for AI-powered features.
+- Knowledge of streaming databases or time-series stores (InfluxDB, TimescaleDB).
+- Familiarity with graph databases (Neo4j) for fraud network analysis.
+- Contributions to open-source ML projects.
+
+COMPENSATION
+- \$160,000 – \$200,000 base salary depending on experience.
+- Equity, health benefits, and a generous learning budget.
+
