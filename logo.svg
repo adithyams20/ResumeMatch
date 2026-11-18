@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" role="img" aria-label="ResumeMatch logo">
+  <title>ResumeMatch logo</title>
+  <rect x="2" y="2" width="36" height="36" rx="10" fill="#1B2A4A"/>
+  <!-- Orange accent stroke forming an abstract R / checkmark -->
+  <path d="M13 21 L19 27 L28 16" fill="none" stroke="#E85D1E" stroke-width="3.4"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M13 21 L13 13 M13 13 C13 9 21 9 21 13 C21 15.5 18.5 17 15 17"
+        fill="none" stroke="#FFFFFF" stroke-width="2.6"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M15 17 L23 17" fill="none" stroke="#FFFFFF" stroke-width="2.6"
+        stroke-linecap="round"/>
+</svg>

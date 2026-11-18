@@ -28,3 +28,7 @@ chroma_db/
 # OS files
 .DS_Store
 Thumbs.db
+.streamlit/secrets.toml
+.env
+design-reference/
+__pycache__/

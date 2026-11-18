@@ -1,0 +1,18 @@
+[theme]
+base = "light"
+primaryColor = "#E85D1E"
+backgroundColor = "#F5F5F5"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1A1A1A"
+borderColor = "#E5E5E5"
+fontFaces = [
+    { family = "Inter", weights = [400, 500, 600, 700, 800] },
+]
+font = "Inter, sans-serif"
+headingFont = "Inter, sans-serif"
+
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = true

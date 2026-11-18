@@ -13,10 +13,17 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # ---------------------------------------------------------------------------
+# Upload Constraints
+# ---------------------------------------------------------------------------
+MAX_UPLOAD_SIZE_MB: int = 5
+ALLOWED_EXTENSIONS: list[str] = [".pdf", ".docx"]
+
+# ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
 BASE_DIR: Path = Path(__file__).parent
 DATA_DIR: Path = BASE_DIR / "data"
+TMP_UPLOAD_DIR: Path = BASE_DIR / "tmp_uploads"
 SKILLS_FILE: Path = DATA_DIR / "skills.txt"
 CHROMA_DIR: Path = BASE_DIR / ".chromadb"
 

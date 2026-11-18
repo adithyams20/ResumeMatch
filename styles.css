@@ -1,0 +1,981 @@
+/* ResumeMatch design system -- orange + navy blue theme.
+   Tokens mirror .streamlit/config.toml so the two stay in sync.
+*/
+
+:root {
+  /* -- Brand --------------------------------------------------------------- */
+  --navy:         #1B2A4A;
+  --navy-ink:     #12203A;
+  --navy-soft:    #EDEEF3;
+  --accent:       #E85D1E;
+  --accent-ink:   #C44912;
+  --accent-soft:  #FFF2EC;
+
+  /* -- Neutral scale ------------------------------------------------------- */
+  --bg:           #F5F5F5;
+  --surface:      #FFFFFF;
+  --surface-2:    #F2F4F7;
+  --text:         #1A1D22;
+  --text-muted:   #6B7280;
+  --text-faint:   #9AA0AA;
+  --border:       #E3E5EA;
+  --border-strong:#C7CCD4;
+
+  /* -- Semantic (match quality) --------------------------------------------- */
+  --match-green:  #3E7A5B;
+  --match-green-bg:#EEF4F1;
+  --match-amber:  #C98A2A;
+  --match-amber-bg:#FBF3E6;
+  --match-red:    #B8423A;
+  --match-red-bg: #FBEDEB;
+
+  /* -- Spacing (8px scale) -------------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* -- Radius --------------------------------------------------------------- */
+  --radius-sm: 6px;
+  --radius:    10px;
+  --radius-lg: 14px;
+
+  /* -- Typography ----------------------------------------------------------- */
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Fraunces", "Inter", Georgia, serif;
+}
+
+/* -- Page background & body text -------------------------------------------- */
+
+html, body,
+[data-testid="stAppViewContainer"],
+[data-testid="stMain"],
+section.main > div {
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+body,
+[data-testid="stAppViewContainer"] {
+  font-family: var(--font) !important;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Tabular numerals for every score so they align cleanly. */
+[data-testid="stAppViewContainer"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* -- Header bar ------------------------------------------------------------ */
+
+.rm-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) 0 var(--space-5) 0;
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.rm-header-logo {
+  width: 38px; height: 38px;
+  flex-shrink: 0;
+}
+
+.rm-brand-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.rm-brand-tagline {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* -- Input panels (matched pair) ------------------------------------------- */
+
+.rm-input-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rm-input-panel:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.rm-input-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.rm-input-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* -- File row (replaces the dark chip / success banner) --------------------- */
+
+.rm-file-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  margin-top: var(--space-2);
+  font-size: 0.85rem;
+}
+
+.rm-file-row .rm-file-name {
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.rm-file-row .rm-file-size {
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+
+.rm-file-row .rm-file-remove {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.rm-file-row .rm-file-remove:hover {
+  color: var(--match-red);
+  background: var(--match-red-bg);
+}
+
+.rm-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-2);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  min-height: 1.2em;
+}
+
+.rm-status .rm-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* -- File uploader (restyled to match the light panel) --------------------- */
+
+[data-testid="stFileUploader"] {
+  background: transparent;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+  text-align: center;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+[data-testid="stFileUploader"]:hover,
+[data-testid="stFileUploader"][dragover="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+[data-testid="stFileUploader"] button {
+  margin-top: var(--space-2);
+}
+
+/* -- Text area ------------------------------------------------------------- */
+
+textarea,
+[data-testid="stTextarea"] textarea {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text) !important;
+  font-family: var(--font) !important;
+  font-size: 0.9rem !important;
+  line-height: 1.6 !important;
+  resize: vertical;
+}
+
+textarea::placeholder,
+[data-testid="stTextarea"] textarea::placeholder {
+  color: var(--text-faint) !important;
+}
+
+/* -- Primary button -------------------------------------------------------- */
+
+[data-testid="stButton"] button[kind="primary"] {
+  background: var(--accent) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  padding: 0.65rem 2rem !important;
+  border-radius: var(--radius-sm) !important;
+  letter-spacing: 0.01em !important;
+  box-shadow: none !important;
+  transition: background 0.15s ease, transform 0.05s ease !important;
+}
+
+[data-testid="stButton"] button[kind="primary"]:hover {
+  background: var(--accent-ink) !important;
+}
+
+[data-testid="stButton"] button[kind="primary"]:active {
+  transform: translateY(1px);
+}
+
+[data-testid="stButton"] button[kind="primary"]:disabled,
+[data-testid="stButton"] button[kind="primary"]:disabled:hover {
+  background: #C9CDD3 !important;
+  color: #fff !important;
+  cursor: not-allowed;
+}
+
+[data-testid="stButton"] button[kind="primary"] svg {
+  display: none;
+}
+
+/* Secondary / ghost button */
+[data-testid="stButton"] button[kind="secondary"] {
+  background: transparent !important;
+  border: 1px solid var(--border-strong) !important;
+  color: var(--text) !important;
+  font-weight: 600 !important;
+  border-radius: var(--radius-sm) !important;
+  transition: border-color 0.15s ease, color 0.15s ease !important;
+}
+
+[data-testid="stButton"] button[kind="secondary"]:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+/* -- Header ----------------------------------------------------------------- */
+
+.rm-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) 0 var(--space-5) 0;
+  margin-bottom: var(--space-5);
+}
+
+.rm-header-logo {
+  width: 44px; height: 44px;
+  flex-shrink: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.rm-header-logo svg {
+  width: 28px; height: 28px;
+  display: block;
+}
+
+.rm-brand-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-family: var(--font-display);
+}
+
+.rm-brand-tagline {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* -- Two input panels (identical border / radius / background) -------------- */
+
+.rm-input-panel {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rm-input-panel:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.rm-input-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin-bottom: var(--space-2);
+}
+
+.rm-input-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* -- Clean file row (replaces the chip / success banner) -------------------- */
+
+.rm-file-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  margin-top: var(--space-3);
+  font-size: 0.85rem;
+}
+
+.rm-file-row .rm-file-name {
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.rm-file-row .rm-file-size {
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+
+.rm-file-row .rm-file-remove {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.rm-file-row .rm-file-remove:hover {
+  color: var(--match-red);
+  background: var(--match-red-bg);
+}
+
+/* -- File uploader restyled to match the light panel ------------------------ */
+
+[data-testid="stFileUploader"] {
+  background: transparent;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+  text-align: center;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+[data-testid="stFileUploader"]:hover,
+[data-testid="stFileUploader"][dragover="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+[data-testid="stFileUploader"] button {
+  margin-top: var(--space-2);
+}
+
+/* -- Text area ------------------------------------------------------------- */
+
+textarea,
+[data-testid="stTextarea"] textarea {
+  background: var(--surface) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text) !important;
+  font-family: var(--font) !important;
+  font-size: 0.9rem !important;
+  line-height: 1.6 !important;
+  resize: vertical;
+}
+
+textarea::placeholder,
+[data-testid="stTextarea"] textarea::placeholder {
+  color: var(--text-faint) !important;
+}
+
+/* -- Primary button -------------------------------------------------------- */
+
+[data-testid="stButton"] button[kind="primary"] {
+  background: var(--accent) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  padding: 0.7rem 2.25rem !important;
+  border-radius: var(--radius-sm) !important;
+  letter-spacing: 0.01em !important;
+  box-shadow: none !important;
+  transition: background 0.15s ease, transform 0.05s ease !important;
+}
+
+[data-testid="stButton"] button[kind="primary"]:hover {
+  background: var(--accent-ink) !important;
+}
+
+[data-testid="stButton"] button[kind="primary"]:active {
+  transform: translateY(1px);
+}
+
+[data-testid="stButton"] button[kind="primary"]:focus-visible {
+  outline: 3px solid var(--accent-soft) !important;
+  outline-offset: 2px;
+}
+
+[data-testid="stButton"] button[kind="primary"]:disabled,
+[data-testid="stButton"] button[kind="primary"]:disabled:hover,
+[data-testid="stButton"] button[kind="primary"]:disabled:focus-visible {
+  background: #C9CDD3 !important;
+  color: #fff !important;
+  cursor: not-allowed;
+}
+
+[data-testid="stButton"] button[kind="primary"] svg {
+  display: none;
+}
+
+/* -- Quiet inline status line (replaces the green success banner) ---------- */
+
+.rm-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-2);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  min-height: 1.2em;
+}
+
+.rm-status .rm-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rm-status.is-ok .rm-dot { background: var(--match-green); }
+.rm-status.is-loading .rm-dot {
+  background: var(--accent);
+  animation: rm-pulse 1.4s ease-in-out infinite;
+}
+.rm-status.is-warn .rm-dot { background: var(--match-amber); }
+.rm-status.is-err  .rm-dot { background: var(--match-red); }
+
+@keyframes rm-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* -- Secondary / ghost button ---------------------------------------------- */
+
+[data-testid="stButton"] button[kind="secondary"] {
+  background: transparent !important;
+  border: 1px solid var(--border-strong) !important;
+  color: var(--text) !important;
+  font-weight: 600 !important;
+  border-radius: var(--radius-sm) !important;
+  transition: border-color 0.15s ease, color 0.15s ease !important;
+}
+
+[data-testid="stButton"] button[kind="secondary"]:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+/* -- Score area ------------------------------------------------------------ */
+
+.rm-score {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.rm-score-ring {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.rm-score-ring svg {
+  display: block;
+}
+
+.rm-score-ring .rm-score-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.rm-score-value {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1;
+  font-family: var(--font-display);
+}
+
+.rm-score-out-of {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+
+.rm-score-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.rm-score-chip {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.22rem 0.7rem;
+  border-radius: 999px;
+  margin-top: var(--space-2);
+}
+
+.rm-score-chip.strong  { background: var(--match-green-bg);  color: var(--match-green); }
+.rm-score-chip.moderate{ background: var(--match-amber-bg);  color: var(--match-amber); }
+.rm-score-chip.partial  { background: var(--match-amber-bg);  color: var(--match-amber); }
+.rm-score-chip.low     { background: var(--match-red-bg);    color: var(--match-red); }
+
+/* -- Connected strip of three sub-scores ------------------------------------ */
+
+.rm-subscores {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  min-width: 0;
+}
+
+.rm-sub {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+}
+
+.rm-sub + .rm-sub {
+  border-left: 1px solid var(--border);
+}
+
+.rm-sub-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.rm-sub-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.rm-sub-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.rm-sub-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.rm-sub-bar > i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  width: 0%;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rm-sub-note {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+/* -- Matched skill tags ---------------------------------------------------- */
+
+.rm-skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.rm-skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: var(--match-green-bg);
+  color: var(--match-green);
+  border: 1px solid rgba(62, 122, 91, 0.25);
+}
+
+.rm-skill-tag .rm-skill-x {
+  cursor: pointer;
+  opacity: 0.55;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.rm-skill-tag .rm-skill-x:hover {
+  opacity: 1;
+}
+
+/* -- Missing skill list with short notes ------------------------------------ */
+
+.rm-missing-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.rm-missing-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: 0.5rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.rm-missing-item .rm-missing-name {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--match-red);
+  flex-shrink: 0;
+}
+
+.rm-missing-item .rm-missing-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* -- Two-column layout ----------------------------------------------------- */
+
+.rm-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+/* -- "How this score is calculated" collapsible ----------------------------- */
+
+.rm-method {
+  margin-top: var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.rm-method summary {
+  cursor: pointer;
+  list-style: none;
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.rm-method summary::-webkit-details-marker {
+  display: none;
+}
+
+.rm-method summary .rm-method-chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  color: var(--text-muted);
+}
+
+.rm-method[open] summary .rm-method-chevron {
+  transform: rotate(180deg);
+}
+
+.rm-method-body {
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+.rm-method .rm-formula {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.7rem;
+  color: var(--navy-ink);
+  margin: var(--space-3) 0;
+  overflow-x: auto;
+}
+
+.rm-method .rm-legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.rm-method .rm-legend b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* -- Hide Streamlit chrome ------------------------------------------------- */
+
+#MainMenu,
+footer,
+[data-testid="stDeployButton"],
+[data-testid="stStatusWidget"],
+[data-testid="stStatusWidget"] * {
+  display: none !important;
+}
+
+header[data-testid="stHeader"] {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* -- Tablet ---------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .rm-score {
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-4);
+  }
+  .rm-score-ring { align-self: center; }
+  .rm-subscores { grid-template-columns: 1fr; }
+  .rm-sub + .rm-sub { border-left: none; border-top: 1px solid var(--border); }
+  .rm-two-col { grid-template-columns: 1fr; }
+  .rm-input-panel { min-height: auto; }
+}
+
+/* -- Reduced motion -------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* -- Matched skill tags (inline, wrapping, no pill, no x) ------------------ */
+
+.rm-skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.rm-skill-tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* -- Score card: larger ring, verdict sentence, no right whitespace --------- */
+
+.rm-score {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.rm-score-ring svg {
+  width: 180px;
+  height: 180px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.rm-score-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.rm-verdict {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.rm-verdict-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* -- Sub-score strip: 16px below the card, coloured bars ------------------- */
+
+.rm-subscores {
+  margin-top: var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  min-width: 0;
+}
+
+.rm-sub-bar > i.green { background: var(--match-green); }
+.rm-sub-bar > i.amber { background: var(--match-amber); }
+.rm-sub-bar > i.red   { background: var(--match-red); }
+
+.rm-sub-explanation {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  line-height: 1.45;
+}
+
+/* -- Button sized to content, left-aligned --------------------------------- */
+
+.rm-button-wrap {
+  display: flex;
+  justify-content: flex-start;
+  margin: var(--space-4) 0 var(--space-5) 0;
+}
+
+.rm-button-wrap [data-testid="stButton"] {
+  width: auto !important;
+}
+
+.rm-button-wrap [data-testid="stButton"] button {
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+/* -- Job requirement rows -------------------------------------------------- */
+
+.rm-req-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.rm-req-text {
+  flex: 1;
+  font-size: 0.86rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.rm-req-tag {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.rm-req-tag.found { background: var(--match-green-bg); color: var(--match-green); }
+.rm-req-tag.partly { background: var(--match-amber-bg); color: var(--match-amber); }
+.rm-req-tag.not   { background: var(--match-red-bg);   color: var(--match-red); }
+
+.rm-req-evidence {
+  margin-top: var(--space-2);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* -- Hide Streamlit chrome (toolbar, deploy, decoration, collapse arrow) --- */
+
+[data-testid="stToolbar"],
+[data-testid="stDeployButton"],
+[data-testid="stDecoration"],
+[data-testid="stSidebarCollapsedControl"],
+footer,
+#MainMenu {
+  display: none !important;
+}

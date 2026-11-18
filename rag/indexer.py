@@ -10,8 +10,8 @@ Each chunk is at most CHUNK_MAX_WORDS words long.  Metadata stored per chunk:
 from __future__ import annotations
 
 import logging
+import hashlib
 import re
-import uuid
 from typing import Any
 
 import chromadb
@@ -72,7 +72,9 @@ def build_index(
                     "source": "resume",
                 }
             )
-            ids.append(f"chunk_{chunk_counter}_{uuid.uuid4().hex[:8]}")
+            # deterministic ID based on content
+            content_hash = hashlib.md5(chunk_text.encode("utf-8")).hexdigest()
+            ids.append(f"chunk_{chunk_counter}_{content_hash}")
             chunk_counter += 1
 
     if not chunks:

@@ -8,9 +8,12 @@ a single structured result object that app.py can render.
 from __future__ import annotations
 
 import logging
+import re
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from llm.client import LLMAnalysis, LLMInvalidResponseError, LLMUnavailableError
 from matcher.scorer import compute_scores
@@ -32,35 +35,217 @@ logger = logging.getLogger(__name__)
 # Report dataclass
 # ---------------------------------------------------------------------------
 
-@dataclass
-class MatchReport:
-    """Full result of a resume-vs-JD analysis."""
+class MatchReport(BaseModel):
+    """Validated result of a resume-vs-JD analysis."""
 
-    # Scores
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     final_score: float
     skill_match: float
     semantic_match: float
     experience_match: float
-
-    # Skill breakdown
     matched_skills: list[str]
     missing_skills: list[str]
     jd_skills: list[str]
     resume_skills: list[str]
-
-    # Experience
     resume_years: float
     required_years: float
-
-    # RAG evidence
     requirement_matches: list[RequirementMatch]
-
-    # LLM analysis (optional — None if LLM step was skipped or failed)
     llm_analysis: LLMAnalysis | None = None
-    llm_warning: str | None = None   # set when LLM step failed gracefully
+    llm_warning: str | None = None
+    sections: dict[str, str] = Field(default_factory=dict)
+    resume_text: str = ""
+    jd_text: str = ""
+    run_llm: bool = False
+    llm_provider: str = "openai"
 
-    # Section breakdown
-    sections: dict[str, str] = field(default_factory=dict)
+    @property
+    def formula_explanation(self) -> str:
+        return (
+            "Final Score = (0.4 * skill_match) + (0.4 * semantic_match) + "
+            "(0.2 * experience_match), scaled to 0-100."
+        )
+
+
+# ---------------------------------------------------------------------------
+# JD requirement extraction helpers
+# ---------------------------------------------------------------------------
+
+# Header / label lines that should not be treated as requirements.
+_HEADER_PATTERNS: list[re.Pattern[str]] = [
+    re.compile(r"^\s*(what\s+we'?re?\s+(looking\s+for|offer)|requirements?|"
+               r"qualifications?|responsibilities|skills?|eligibility|"
+               r"nice\s+to\s+have|good\s+to\s+have|preferred|benefits?|"
+               r"about\s+(us|the\s+(role|team|company))|"
+               r"job\s+(description|summary|overview)|duties|"
+               r"who\s+you\s+are|you\s+will|we\s+(are|offer)|"
+               r"minimum|education|degree|experience)\s*:?\s*$",
+               re.IGNORECASE),
+    # Eligibility degree lines like "Degree: B.E. / B.Tech..."
+    re.compile(r"^\s*(eligibility|degree|qualification)\s*:", re.IGNORECASE),
+    # Single-word or very short lines (< 3 words) that are just labels
+    re.compile(r"^\s*\w{1,30}\s*:\s*$"),
+]
+
+# Patterns that indicate the line is a real requirement (has a verb or skill keyword)
+_SKIP_IF_NO_VERB = re.compile(
+    r"\b(experience|knowledge|proficiency|familiarity|understanding|"
+    r"ability|skill|work|develop|build|design|implement|write|manage|"
+    r"strong|excellent|good|comfortable|passionate|eager|willing|"
+    r"collaborate|communicate|learn)\b",
+    re.IGNORECASE,
+)
+
+
+def _is_header_line(line: str) -> bool:
+    """Return True if *line* looks like a section header, not a requirement."""
+    stripped = line.strip()
+    if not stripped:
+        return True
+    for pat in _HEADER_PATTERNS:
+        if pat.match(stripped):
+            return True
+    # Pure bullet with a single word (e.g. "* Python")
+    bullet_text = re.sub(r"^[\s\-\*\•\·]+", "", stripped)
+    if len(bullet_text.split()) <= 1:
+        return True  # too short to be a real requirement
+    return False
+
+
+# Sentences that describe a real requirement rather than company boilerplate.
+_REQUIREMENT_HINTS: list[re.Pattern[str]] = [
+    re.compile(r"\b(requirements?|qualifications?|responsibilities|duties|"
+               r"skills?|tools|technolog|experience|knowledge|proficiency|"
+               r"familiarity|understanding|ability|develop|build|design|"
+               r"implement|write|manage|work|collaborate|communicate|"
+               r"qualify|eligible|degree|certificate|certification|"
+               r"role|position|candidate|applicant)\b", re.IGNORECASE),
+]
+
+# Company boilerplate that should never be evaluated as a requirement.
+_BOILERPLATE_PATTERNS: list[re.Pattern[str]] = [
+    re.compile(r"\b(about\s+us|who\s+we\s+are|our\s+company|our\s+team|"
+               r"headcount|hiring|recruiting|equal\s+opportunity|"
+               r"diversity|inclusion|benefits?|perks|compensation|salary|"
+               r"culture|mission|vision|values?|work\s+life|flexible|remote|"
+               r"join\s+us|apply\s+now|we\s+are\s+hiring|now\s+hiring|"
+               r"location|based\s+in|country|countries|state|city|"
+               r"EOE|EEO|affirmative\s+action)\b", re.IGNORECASE),
+    re.compile(r"\b(equity|health\s+insurance|401k|retirement|vacation|"
+               r"PTO|paid\s+time|dental|vision|life\s+insurance|"
+               r"wellness|gym|free\s+lunch|snacks|breakroom|kitchen|"
+               r"parking|transit|commute|shuttle|relocation|"
+               r"mentorship|growth|learning\s+and\s+development|L&D)\b", re.IGNORECASE),
+]
+
+
+def _is_requirement_sentence(sent: str) -> bool:
+    """Return True if *sent* looks like a real requirement rather than boilerplate."""
+    stripped = sent.strip()
+    if not stripped:
+        return False
+    if len(stripped.split()) < 6:
+        return False
+    for pat in _BOILERPLATE_PATTERNS:
+        if pat.search(stripped):
+            return False
+    for pat in _REQUIREMENT_HINTS:
+        if pat.search(stripped):
+            return True
+    return False
+
+
+def _extract_jd_requirements(jd_text: str, nlp: Any | None = None) -> list[str]:
+    """Extract meaningful requirement phrases from a job description.
+
+    Strategy:
+    1. Split on newlines first to preserve bullet-point structure.
+    2. Further split long lines on ". " or "; " sentence boundaries.
+    3. Drop header lines and lines shorter than 5 words.
+    4. Deduplicate while preserving order.
+
+    Args:
+        jd_text: Cleaned job description text.
+        nlp: Optional spaCy model (unused here but kept for signature compat).
+
+    Returns:
+        List of requirement strings, deduplicated, capped at 40.
+    """
+    requirements: list[str] = []
+    seen: set[str] = set()
+
+    for raw_line in jd_text.splitlines():
+        # Strip leading bullet characters
+        line = re.sub(r"^[\s\-\*\•\·\–\—]+", "", raw_line).strip()
+        if not line:
+            continue
+
+        # Split on sentence boundaries within a single line
+        sub_sentences = re.split(r"(?<=[.!?;])\s+", line)
+
+        requirements: list[str] = []
+    seen: set[str] = set()
+    skipped = 0
+
+    for raw_line in jd_text.splitlines():
+        line = re.sub(r"^[\s\-\*\•\·\–\—]+", "", raw_line).strip()
+        if not line:
+            continue
+        sub_sentences = re.split(r"(?<=[.!?;])\s+", line)
+        for sent in sub_sentences:
+            sent = sent.strip().rstrip(".")
+            if not sent:
+                continue
+            if _is_header_line(sent):
+                continue
+            if not _is_requirement_sentence(sent):
+                skipped += 1
+                continue
+            key = sent.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            requirements.append(sent)
+
+    return requirements[:40], skipped
+
+
+# ---------------------------------------------------------------------------
+# Report dataclass
+# ---------------------------------------------------------------------------
+
+class MatchReport(BaseModel):
+    """Validated result of a resume-vs-JD analysis."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    final_score: float
+    skill_match: float
+    semantic_match: float
+    experience_match: float
+    matched_skills: list[str]
+    missing_skills: list[str]
+    jd_skills: list[str]
+    resume_skills: list[str]
+    resume_years: float
+    required_years: float
+    requirement_matches: list[RequirementMatch]
+    llm_analysis: LLMAnalysis | None = None
+    llm_warning: str | None = None
+    sections: dict[str, str] = Field(default_factory=dict)
+    resume_text: str = ""
+    jd_text: str = ""
+    run_llm: bool = False
+    llm_provider: str = "openai"
+    jd_requirement_count: int = 0
+    jd_skipped_count: int = 0
+
+    @property
+    def formula_explanation(self) -> str:
+        return (
+            "Final Score = (0.4 * skill_match) + (0.4 * semantic_match) + "
+            "(0.2 * experience_match), scaled to 0-100."
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -127,9 +312,7 @@ def build_report(
     # ------------------------------------------------------------------
     t2 = time.perf_counter()
     collection = build_index(sections, embedding_model)
-    jd_sentences = split_sentences(jd_clean, nlp=nlp)
-    # Filter to likely requirement sentences (non-trivial length)
-    requirements = [s for s in jd_sentences if len(s.split()) >= 5][:40]
+    requirements, skipped_count = _extract_jd_requirements(jd_clean, nlp=nlp)
     requirement_matches = retrieve_for_requirements(requirements, collection, embedding_model)
     logger.info(
         "Stage 3 (RAG): %.2fs — %d requirements, %d chunks indexed",
@@ -202,5 +385,11 @@ def build_report(
         llm_analysis=llm_analysis,
         llm_warning=llm_warning,
         sections=sections,
+        resume_text=resume_clean,
+        jd_text=jd_clean,
+        run_llm=run_llm,
+        llm_provider=llm_provider,
+        jd_requirement_count=len(requirements),
+        jd_skipped_count=skipped_count,
     )
 
